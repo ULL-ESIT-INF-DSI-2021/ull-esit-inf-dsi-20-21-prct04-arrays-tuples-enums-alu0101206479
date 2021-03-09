@@ -6,7 +6,7 @@
  * @param texto Texto de entrada
  * @return Devuelve el texto
  */
-function muestraTexto(texto: string): string {
+export function muestraTexto(texto: string): string {
   return texto;
 }
 
