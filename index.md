@@ -29,110 +29,148 @@ Finalmente, nos tiene que quedar algo parecido a lo siguiente (Se muestra a la i
 #### Ejercicios
 En cuanto a los ejercicios que se mostrarán a continuación, podemos ver sus respectivos enunciados [en el enunciado de la práctica 4](https://ull-esit-inf-dsi-2021.github.io/prct04-arrays-tuples-enums/), los haremos todos en el directorio `/src` y haremos las respectivas pruebas en el directorio `/test`.
 
-##### Ejercicio 1 - Años bisiestos
-En este ejercicio se creará la función `function decodeResistor(color: string[]): number | string`, la cual recibirá como parámetro los nombres de los colores de una resistencia y retornará un número de dos dígitos indicando el valor de la resistencia. Lo primero que se debe hacer en la función es crear el `array` con la codificación de los colores, en el cual cada color va a corresponder con el número de su posición, por ejemplo el negro corresponde con el 0 porque esta en la posición 0 del `array`. Posteriormente crearemos las variable de salida y un contador, recorreremos con un `forEach` el `array` de entrada y dentro de este tendremos un condicional para que si nos introducen más de 2 colores no introduzcamos sus números en la salida. Dentro de dicho condicional con la función `indexOf` obtendremos los número de las posición de los colores busquemos, meteremos este número en la variable de salida y cuando acabe el `forEach` dicha variable la pasaremos a número y la retornaremos.
+##### Ejercicio 1 - Decodificar resistencias
+En este ejercicio se creará la función `function decodeResistor(color: string[]): number | string`, la cual recibirá como parámetro los nombres de los colores de una resistencia y retornará un número de dos dígitos indicando el valor de la resistencia. 
 
-El código del ejercicio sería el siguiente:
+Lo primero que se debe hacer en la función es crear el `array` con la codificación de los colores, en el cual cada color va a corresponder con el número de su posición. Por ejemplo, el negro corresponde con el 0 porque está en la posición 0 del `array`. Posteriormente crearemos la variable de salida y una variable contador, recorreremos con un `forEach` el `array` de entrada y dentro de este tendremos un condicional en el que se comprueba con el contador si hay más de 2 colores en el array de entrada. En ese caso se llegará hasta el segundo color introdujendo los correspondientes números en la salida y de ahí se ignorarán los demás. Dentro de dicho condicional con la función `indexOf` obtendremos los número de las posiciones de los colores busquemos, introduciremos este número en la variable de salida y cuando acabe el `forEach` dicha variable la pasaremos a número y se retornará.
+
+El código del ejercicio sería el siguiente (/src/ejercicio-1.ts):
 
 ```typescript
-  function isLeapYear(year: number): boolean {
-    if (year%4 == 0) {
-      if (year%100 == 0) {
-        if (year%400 == 0) {
-          return true;
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  decodeResistor(["Amarillo", "Marrón", "Verde"]  // Valor de retorno = 41
+ * ```
+ * Función para obtener el valor de una resistencia a partir de los colores
+ * @param color Array que contiene los nombres de los colores de una resistencia
+ * @return Un número de dos dígitos indicando el valor de la resistencia
+ */
+export function decodeResistor(color: string[]): number | string {
+  const colores: string[] = ["Negro", "Marrón", "Rojo", "Naranja", "Amarillo", "Verde", "Azul", "Violeta", "Gris", "Blanco"];
+  let salida: number | string = "";
+  let count: number = 0;
+  color.forEach((item) => {
+    if (count < 2) {
+      salida = salida + colores.indexOf(item).toString();
+    }
+    count++;
+  });
+  salida = parseInt(salida);
+  return salida;
+}
+```
+
+El test sería el siguiente (/tests/ejercicio-1.spec.ts):
+
+```typescript
+import 'mocha';
+import {expect} from 'chai';
+import {decodeResistor} from '../src/ejercicio-1';
+
+describe('Prueba de ejercicio 1', () => {
+  it('decodeResistor(["Marrón", "Verde"]) returns value 15', () => {
+    expect(decodeResistor(["Marrón", "Verde"])).to.be.equal(15);
+  });
+
+  it('decodeResistor(["Marrón", "Verde", "Violeta"]) returns value 15', () => {
+    expect(decodeResistor(["Marrón", "Verde", "Violeta"])).to.be.equal(15);
+  });
+});
+```
+
+
+##### Ejercicio 2 - Palabras encadenadas en un array
+En este ejercicio se creará la función `function meshArray(palabras: string[]): string`, la cual recibirá como parámetro un `array de string` con las palabras a comprobar. Se comprobará si las palabras estan encadenadas y en ese caso la función devolverá una cadena de texto que contenga las letras que encadenan las palabras del `array`, en caso contrario, la funcion retornará la cadena `"Error al encadenar"`.
+
+Lo primero que se debe hacer en la función es crear las variables necesarias para el funcionamiento de esta. Entre dichas variables, es importante destacar las siguientes:
+ * `posicionPp`: Con esta nos moveremos en la palabra que estemos analizando.
+ * `posicionSp`: Con esta nos moveremos en la palabra que va después.
+ * `contador`: Esta contará el número de veces que se retrocede en la palabra que se esta analizando.
+
+Posteriormente utilizaremos un bucle `forEach` en el que recorremos el `array` de las palabras. En este, lo primero que haremos es inicializar las variables y después pondremos un bucle `while` en el que nos moveremos hasta encontrar el encadenamiento, a no ser que no haya, que en ese caso el `while` acabaría por la condición `posicionPp < item.length `. Posteriormente, se hará la comprobación en la que si la letra que se esta analizando en una palabra es igual a la letra que se esta analizando en la otra, se mira si las veces que se ha avanzado en la segunda palabra es igual al número de veces que se retrocedió en la primera, en ese caso, se introduce la letra en la variable `salidaAux` y se sale del `while` para avanzar a la siguiente palabra posteriormente. En otro caso se introduce la letra también en la variable `salidaAux`, pero también se avanza en la primera y en la segunda palabra y se sigue dentro del `while` para ver si siguen coincidiendo las letras.
+
+Una vez que se sale del while se comprueba si las veces que se ha retrocedido en la palabra es menor a el número de letras que tiene la palabra, en ese caso, se introduce la información de variable `salidaAux` en la variable `salida` y en caso contrario significa que no hay encadenamiento, por lo que la variable `salida` tendrá el valor `"Error al encadenar"` y la variable `i` se pondrá a 100 (Un número lo suficientemente grande) para que no vuelva a entrar al bucle while en las siguientes palabras.
+
+Una vez se sale del bucle `forEach` se retorna la variable `salida`, que contendrá en una cadena de texto las letras que encadenan las palabras del `array` en caso de que haya encadenamiento en todas las palabras. O contendrá la cadena `"Error al encadenar"` en caso de que no haya encadenamiento en alguna de las palabras.
+
+
+El código del ejercicio sería el siguiente (/src/ejercicio-2.ts):
+
+```typescript
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  meshArray(["allow", "lowering", "ringmaster", "terror"])  // Valor de retorno = "lowringter"
+ *  meshArray(["kingdom", "dominator", "notorious", "usual", "allegory"]) // Valor de retorno = "Error al cadenar"
+ * ```
+ * Función para comprobar si las palabras de un array estan encadenadas o no
+ * @param palabras Array que contiene las palabras a comprobar
+ * @return "Error al encadenar" si las cadenas del array no estan encadenadas
+ * @return "Una cadena de texto que contenga las letras que encandenan las palabras del array"
+ */
+
+export function meshArray(palabras: string[]): string {
+  let posicionPp: number = 1;
+  let posicionSp: number = 0;
+  let contador:number = 0;
+  let i: number = 0;
+  let salidaAux: string = "";
+  let salida: string = "";
+
+  palabras.forEach((item) => {
+    posicionPp = 1;
+    posicionSp = 0;
+    contador = 0;
+    salidaAux = "";
+    while (posicionPp < item.length && i+1 < palabras.length) {
+      if (item[item.length-posicionPp] == palabras[i+1][posicionSp]) {
+        if (posicionSp == contador) {
+          salidaAux = salidaAux + item[item.length-posicionPp];
+          break;
         } else {
-          return false;
+          salidaAux = salidaAux + item[item.length-posicionPp];
+          posicionPp--;
+          posicionSp++;
         }
       } else {
-        return true;
+        posicionPp++;
+        contador++;
       }
-    } else {
-      return false;
     }
-  }
 
-  let año: number = 1997;
-  let funcionEj1: boolean = isLeapYear(año);
-  console.log(`\nEl año ${año} es bisiesto: ${funcionEj1}`);
+    if (posicionPp < item.length) {
+      salida = salida + salidaAux;
+      i++;
+    } else {
+      salida = "Error al encadenar";
+      i = 100;
+    }
+  });
 
-  año = 1996;
-  funcionEj1 = isLeapYear(año);
-  console.log(`\nEl año ${año} es bisiesto: ${funcionEj1}`);
+  return salida;
+}
 
-  año = 1900;
-  funcionEj1 = isLeapYear(año);
-  console.log(`\nEl año ${año} es bisiesto: ${funcionEj1}`);
-
-  año = 2000;
-  funcionEj1 = isLeapYear(año);
-  console.log(`\nEl año ${año} es bisiesto: ${funcionEj1}`);
 ```
 
-Salida del código:
-
-![Salida_ej1](/images/salida_ej1.png)
-
-
-##### Ejercicio 2 - Notación decimal y factorial
-En este disponemos de 3 funciones:
-
-  * Función `decimalToFactorial(numero: number): string`: A esta función se le pasa como parámetro un número entero, lo pasa a notación decimal y lo retorna. Para ello lo primero que se hace es crear las variables necesarias y a través de un bucle `ẁhile` se obtiene el factorial mayor por debajo del número y posteriormente se hace la siguiente formula `463 = 3 x 5! + 4 x 4! + 1 x 3! + 0 x 2! + 1 x 1! + 0 x 0!` a través de un bucle `for`, donde los números que multiplican a los factoriales se obtienen haciendo la división entre el resto (El cual empieza siendo el número entero y en las siguientes iteraciones pasa a ser el número menos lo que se va sacando) y el factorial. Esta división la truncamos con la función `floor` para evitar problemas. Por lo tanto después de sacar ese número se multiplica por el factorial correspondiente, se va haciendo el sumatorio hasta que ya obtenemos la notación factorial y la retornamos.
-
-  * Función `factorialToDecimal(cadena: string): number`: A esta función se le pasa como parámetro una notación factorial, obtiene el número entero que representa y lo retorna. Para ello se crea una variable que representará la notación que se retorna y una auxiliar, en este caso `j`, la cual se va incrementando para ir cogiendo los números de la notación de izquierda a derecha. Posteriormente a través de un bucle `for` que va desde el tamaño de la notación hasta 0, multiplicamos el número correspondiente de la notación (marcado por la `j`) por el factorial correspondiente (marcado por la `i`) y haremos el sumatorio moviendonos en todas las posiciones de la notación. Finalmente se obtiene el número entero que representa dicha notación y se retorna.
-
-  * Función `function factorial(n: number): number`: A esta función se le pasa como parámetro un número y retorna el factorial de dicho número. Para ello la función utiliza `recursividad` multiplicando el número por el factorial del número-1, siendo el caso base que cuando el número que se pase por parámetro sea igual a 0, retorne 1.
-
-El código del ejercicio sería el siguiente:
+El test sería el siguiente (/tests/ejercicio-2.spec.ts)::
 
 ```typescript
-  function decimalToFactorial(numero: number): string {
-    let factorialMayor: number = 0;
-    let notacionFactorial: string = '';
-    let numeroNotacion: number = 0;
+import 'mocha';
+import {expect} from 'chai';
+import {meshArray} from '../src/ejercicio-2';
 
-    while (factorial(factorialMayor) < numero) {
-      factorialMayor++;
-    }
-    factorialMayor--;
+describe('Prueba de ejercicio 2', () => {
+  it('meshArray(["allow", "lowering", "ringmaster", "terror"]) returns string "lowringter"', () => {
+    expect(meshArray(["allow", "lowering", "ringmaster", "terror"])).to.be.equal("lowringter");
+  });
 
-    for (let i: number = factorialMayor; i > -1; i--) {
-      numeroNotacion = Math.floor(numero/factorial(i));
-      notacionFactorial = notacionFactorial + numeroNotacion.toFixed();
-      numero = numero - (numeroNotacion*factorial(i));
-    }
-    return notacionFactorial;
-  }
+  it('meshArray(["kingdom", "dominator", "notorious", "usual", "allegory"] returns string "Error al encadenar"', () => {
+    expect(meshArray(["kingdom", "dominator", "notorious", "usual", "allegory"])).to.be.equal("Error al encadenar");
+  });
+});
 
-
-  function factorialToDecimal(cadena: string): number {
-    let notacionNumero: number = 0;
-    let j: number = 0;
-    for (let i: number = cadena.length-1; i > - 1; i--) {
-      notacionNumero = notacionNumero + (parseInt(cadena[j]) * factorial(i));
-      j++;
-    }
-    return notacionNumero;
-  }
-
-  function factorial(n: number): number {
-    if (n == 0) {
-      return 1;
-    }
-    return n * factorial(n-1);
-  }
-
-  let numeroEj2: number | string = 463;
-  let funcionEj2: number | string = decimalToFactorial(463);
-  console.log(`\nEl número ${numeroEj2} codificado en notación factorial sería: ${funcionEj2}`);
-
-  numeroEj2 = "341010";
-  funcionEj2 = factorialToDecimal("341010");
-  console.log(`\nLa notacion factorial ${numeroEj2} sería el número entero: ${funcionEj2}`);
 ```
-
-Salida del código:
-
-![Salida_ej2](/images/salida_ej2.png)
 
 
 ##### Ejercicio 3 - Validador de mensajes
