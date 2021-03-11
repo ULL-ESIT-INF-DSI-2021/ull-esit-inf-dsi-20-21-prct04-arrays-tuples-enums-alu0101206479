@@ -11,6 +11,7 @@
     "start4": "tsc-watch --onSuccess \"node dist/ejercicio-4.js\"",
     "start5": "tsc-watch --onSuccess \"node dist/ejercicio-5.js\"",
     "start6": "tsc-watch --onSuccess \"node dist/ejercicio-6.js\"",
+    "start7": "tsc-watch --onSuccess \"node dist/ejercicio-7.js\"",
     "doc": "typedoc"
   },
   "repository": {
