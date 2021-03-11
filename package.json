@@ -10,6 +10,7 @@
     "start3": "tsc-watch --onSuccess \"node dist/ejercicio-3.js\"",
     "start4": "tsc-watch --onSuccess \"node dist/ejercicio-4.js\"",
     "start5": "tsc-watch --onSuccess \"node dist/ejercicio-5.js\"",
+    "start6": "tsc-watch --onSuccess \"node dist/ejercicio-6.js\"",
     "doc": "typedoc"
   },
   "repository": {
