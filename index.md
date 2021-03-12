@@ -623,242 +623,101 @@ describe('Prueba de ejercicio 7', () => {
 
 
 ##### Ejercicio 8 - El agente
-En este ejercicio se creará la función `ipsInRange(ip1: string, ip2: string): number`, la cual recibirá como parámetro dos cadenas que representan las IPs y devuelve un valor numérico que represente el número de IPs disponibles en el rango correspondiente. Para ello lo primero que haremos en la función es crear dos constantes tipo string que almacenarán cada número de las IPs (serían 4 en total), también crearemos la variable `rango` que será la que contenga el rango de direcciones y la vairable `n` que nos servirá como variable auxiliar.
+En este ejercicio se creará por un lado el tipo `Point` que representa una posición en el tablero y que es un vector de dos números (Coordenada x y coordenada y). Y por otro lado se creará la función `agent(x: number, y: number, initialPoint: Point, endPoint: Point): string | string[]`, la cual recibirá como parámetro número de filas del tablero, el número de columnas del tablero, la posición inicial del agente y la posición objetivo a la que el agente tiene que llegar. Y retornará cadenas de error si los puntos de inicio o objetivo están fuera del tablero, o un vector con los movimientos que tiene que hacer el agente para llegar de la posición de inicio a la posición objetivo si estas están dentro del tablero. 
 
-Posteriormente haremos un bucle `for` que servirá para movernos en los números de las IPs de derecha a izquiera y hacer el sumatorio de sus respectivas restas multiplicadas por n (n que cada vez que nos movamos a la izquierda va a multiplicar su valor por 256, que va a ser el rango de direcciones disponibles entre cada valor de la resta).
+Para ello lo primero que haremos es comprobar si el posición de inicio del agente está dentro del tablero, si no lo está se retorna la cadena ``¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [${initialPoint[0]}, ${initialPoint[1]}] y el tablero es de ${x}x${y}``. Posteriormente se comprueba si la posición objetivo está dentro del tablero y si no lo está la función retorna la cadena ``¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [${endPoint[0]}, ${endPoint[1]}] y el tablero es de ${x}x${y}``. Si las dos posiciones estan dentro del tablero, continúa el código con normalidad.
 
-Finalmente la función retornará el rango de direcciones obtenido del bucle.
+Después a través de un bucle `while` y de condicionales `if` se comprueba si la posición objetivo esta por encima o por debajo de la posición de inicio. Si está por encima, se incrementa la coordenada y (Posición 1) de la posición de inicio y se introduce en el `array` de salida la palabra `"North"` ya que nos estaríamos moviendo para el norte del tablero. Pero si está por debajo, se decrementa la coordenada y (Posición 1) de la posición de inicio y se introduce en el `array` de salida la palabra `"South"` ya que nos estaríamos moviendo para el sur del tablero. Esto se repite hasta que la posición del agente esté a la misma altura en el tablero que la posición objetivo.
 
-El código del ejercicio sería el siguiente:
+Posteriormente a través de otro bucle `while` y de condicionales `if` se comprueba si la posición objetivo esta a la derecha o a la izquierda de la posición de inicio. Si está a la derecha, se incrementa la coordenada x (Posición 0) de la posición de inicio y se introduce en el `array` de salida la palabra `"East"` ya que nos estaríamos moviendo para el este del tablero. Pero si está a la izquierda, se decrementa la coordenada x (Posición 0) de la posición de inicio y se introduce en el `array` de salida la palabra `"West"` ya que nos estaríamos moviendo para el oeste del tablero. Esto se repite hasta que la posición del agente esté en la misma columna en el tablero que la posición objetivo.
 
-```typescript
-  function ipsInRange(ip1: string, ip2: string): number {
-    const ip1Numbers: string[] = ip1.split(".");
-    const ip2Numbers: string[] = ip2.split(".");
-    let rango: number = 0;
-    let n: number = 1;
-
-    for (let i = ip1Numbers.length-1; i > -1; i--) {
-      rango = rango + (parseInt(ip2Numbers[i])-parseInt(ip1Numbers[i])) * n;
-      n = n*256;
-    }
-    return rango;
-  }
-
-  console.log("\nRangos IPs == IPs disponibles en ese rango:");
-
-  let ip1: string = "10.0.0.0";
-  let ip2: string = "10.2.0.0";
-  let funcionEj8 = ipsInRange(ip1, ip2);
-  console.log(`\n${ip1}, ${ip2} == ${funcionEj8}`);
-
-  ip1 = "10.0.0.0";
-  ip2 = "10.0.1.0";
-  funcionEj8 = ipsInRange(ip1, ip2);
-  console.log(`${ip1}, ${ip2} == ${funcionEj8}`);
-
-  ip1 = "20.0.0.10";
-  ip2 = "20.0.1.0";
-  funcionEj8 = ipsInRange(ip1, ip2);
-  console.log(`${ip1}, ${ip2} == ${funcionEj8}`);
-```
-
-Salida del código:
-
-![Salida_ej8](/images/salida_ej8.png)
+Finalmente ya estaría el agente en la posición objetivo por lo que la función retorna el vector de movimiendos.
 
 
-##### Ejercicio 9 - Entrenador Pokemon
-En este ejercicio se creará la función `dañoPokemon(tipoPokemon1: string, tipoPokemon2: string, ataque1: number, defensa2: number)`, la cual recibirá como parámetro el tipo de Pokemon que tiene, el tipo de Pokemon de su oponente, su capacidad de ataque y la capacidad de defensa de su oponente. La función devolverá como resultado el daño causado. 
-
-Esto se basará en la siguiente formula, donde `ataque` es tu capacidad de ataque, `defensa` es la capacidad de defensa del oponente y la efectividad del ataque varía dependiendo de los tipos de pokemon que esten batallando (se puede ver en el enunciado de la práctica):
-```daño = 50 * (ataque / defensa) * efectividad```
-
-Lo primero que debemos hacer en la función es crear las variables `efectividad` (almacenará la efectividad) y `daño`, será la variable que se retorne y contendrá el daño después de realizar la formula.
-
-Posteriormente haremos las comprobaciones necesarias de los tipos de los Pokemons para darle el valor correspondiente a la efectividad, esto lo haremos con un `if` indicando que si son del mismo tipo la efectividad será 0.5 y si no lo son, se hará un switch para comprobar los distintos casos posibles y darle el valor correspondiente a la efectividad. Después de esto, se realizará la formula ya que tendremos todos los valores que necesitamos para obtener el daño y se retornará.
-
-El código del ejercicio sería el siguiente:
+El código del ejercicio sería el siguiente (/src/ejercicio-8.ts):
 
 ```typescript
-  function dañoPokemon(tipoPokemon1: string, tipoPokemon2: string, ataque1: number, defensa2: number) {
-    let efectividad: number = 0;
-    let daño: number = 0;
+type Point = [number, number];
 
-    if (tipoPokemon1 == tipoPokemon2) {
-      efectividad = 0.5;
-    } else {
-      switch (tipoPokemon1) {
-        case "fuego":
-          if (tipoPokemon2 == "hierba") {
-            efectividad = 2;
-          }
-          if (tipoPokemon2 == "eléctrico") {
-            efectividad = 1;
-          }
-          if (tipoPokemon2 == "agua") {
-            efectividad = 0.5;
-          }
-          break;
+/**
+ * ```typescript
+ * // Ejemplos de llamadas
+ *  agent(10, 10, [1, 3], [3, 5]);  // Valor de retorno = ["North", "North", "East", "East"]
+ *  agent(10, 10, [11, 3], [3, 5]); // Valor de retorno = "¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [11, 3] y el tablero es de 10x10"
+ *  agent(10, 10, [1, 3], [3, 13]); // Valor de retorno = "¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [3, 13] y el tablero es de 10x10"
+ *  ```
+ * Función que recibe las dimensiones de un tablero, la posicion de inicio de un agente y la posición objetivo. La función retornará un vector con los movimientos que tiene que tomar el agente para llegar al objetivo, si las posiciones están dentro del tablero, o retornará cadenas de error si no lo están.
+ * @param x Número de filas del tablero
+ * @param y Número de columnas del tablero
+ * @param initialPoint Posición inicial del agente
+ * @param endPoint Posicion objetivo a la que el agente tiene que llegar
+ * @return Un vector con los movimientos que tiene que tomar el agente para llegar al objetivo, si las posiciones de inicio y objetivo del agente estan dentro del tablero. Si la posicion de inicio no lo está la función retornará la cadena "¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [${initialPoint[0]}, ${initialPoint[1]}] y el tablero es de ${x}x${y}" y si la posición objetivo no lo está la función retornará la cadena "¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [${endPoint[0]}, ${endPoint[1]}] y el tablero es de ${x}x${y}".
+ */
 
-        case "hierba":
-          if (tipoPokemon2 == "agua") {
-            efectividad = 2;
-          }
-          if (tipoPokemon2 == "eléctrico") {
-            efectividad = 1;
-          }
-          if (tipoPokemon2 == "fuego") {
-            efectividad = 0.5;
-          }
-          break;
+export function agent(x: number, y: number, initialPoint: Point, endPoint: Point): string | string[] {
+  const salida: string[] = [];
 
-        case "eléctrico":
-          if (tipoPokemon2 == "agua") {
-            efectividad = 2;
-          }
-          if ((tipoPokemon2 == "fuego") || (tipoPokemon2 == "hierba")) {
-            efectividad = 1;
-          }
-          break;
-
-        case "agua":
-          if (tipoPokemon2 == "fuego") {
-            efectividad = 2;
-          } else {
-            efectividad = 0.5;
-          }
-          break;
-      }
-    }
-
-    daño = 50 * (ataque1 / defensa2) * efectividad;
-    return daño;
+  if (initialPoint[0] > x || initialPoint[1] > y) {
+    return `¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [${initialPoint[0]}, ${initialPoint[1]}] y el tablero es de ${x}x${y}`;
   }
 
-  let tipoPokemon1 = "fuego";
-  let tipoPokemon2 = "hierba";
-  let ataque = 4;
-  let defensa = 3;
-  let funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
+  if (endPoint[0] > x || endPoint[1] > y) {
+    return `¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [${endPoint[0]}, ${endPoint[1]}] y el tablero es de ${x}x${y}`;
+  }
 
-  tipoPokemon1 = "fuego";
-  tipoPokemon2 = "agua";
-  ataque = 3;
-  defensa = 7;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
+  while (initialPoint[1] != endPoint[1]) {
+    if (initialPoint[1] > endPoint[1]) {
+      salida.push("South");
+      initialPoint[1]--;
+    }
+    if (initialPoint[1] < endPoint[1]) {
+      salida.push("North");
+      initialPoint[1]++;
+    }
+  }
 
-  tipoPokemon1 = "fuego";
-  tipoPokemon2 = "eléctrico";
-  ataque = 8;
-  defensa = 6;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
+  while (initialPoint[0] != endPoint[0]) {
+    if (initialPoint[0] < endPoint[0]) {
+      salida.push("East");
+      initialPoint[0]++;
+    }
+    if (initialPoint[0] > endPoint[0]) {
+      salida.push("West");
+      initialPoint[0]--;
+    }
+  }
 
-  tipoPokemon1 = "agua";
-  tipoPokemon2 = "hierba";
-  ataque = 2;
-  defensa = 7;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
-
-  tipoPokemon1 = "agua";
-  tipoPokemon2 = "eléctrico";
-  ataque = 9;
-  defensa = 5;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
-
-  tipoPokemon1 = "hierba";
-  tipoPokemon2 = "eléctrico";
-  ataque = 7;
-  defensa = 7;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
-
-  tipoPokemon1 = "fuego";
-  tipoPokemon2 = "fuego";
-  ataque = 2;
-  defensa = 1;
-  funcionEj9 = dañoPokemon(tipoPokemon1, tipoPokemon2, ataque, defensa);
-  console.log(`\nTipo pokemon atacante: ${tipoPokemon1}, tipo pokemon defensor: ${tipoPokemon2}, ataque: ${ataque}, defensa: ${defensa}:`);
-  console.log(`\tDaño del ataque: ${funcionEj9}`);
+  return salida;
+}
 ```
 
-Salida del código:
-
-![Salida_ej9](/images/salida_ej9.png)
-
-
-##### Ejercicio 10 - Validador de nombre usuario
-En este ejercicio se creará la función `isValidUsername(usuario: string): boolean`, la cual recibirá como parámetro una cadena con un nombre de usuario y devolverá true o false dependiendo si el nombre es válido o no lo es, respectivamente. 
-
-Para ello, realizaremos diversas comprobaciones a traves de condicionales `if`, si alguna no se cumple la función retorna false, entre ellas:
-
-  1. El nombre de usuario tiene al menos 4 caracteres y no más de 30.
-  2. El nombre de usuario no empieza y no termina con un guión bajo.
-  3. El nombre de usuario contiene al menos una letra mayúscula, una letra minúscula, un número y algún símbolo especial ($,-,_).
-  4. El nombre de usuario no tiene un mismo tipo de carácter más de dos veces.
-
-Si se han pasado todas las comproaciones sin que se retorne false, la función retorna true.
-
-El código del ejercicio sería el siguiente:
+El test sería el siguiente (/tests/ejercicio-8.spec.ts):
 
 ```typescript
-  function isValidUsername(usuario: string): boolean {
-    if (usuario.length < 4 || usuario.length > 30) {
-      return false;
-    }
+import 'mocha';
+import {expect} from 'chai';
+import {agent} from '../src/ejercicio-8';
 
-    if (usuario[0] == "_" || usuario[usuario.length-1] == "_") {
-      return false;
-    }
+describe('Prueba de ejercicio 8', () => {
+  it('agent(10, 10, [1, 3], [3, 5]) returns vector ["North", "North", "East", "East"]', () => {
+    expect(agent(10, 10, [1, 3], [3, 5])).to.deep.equal(["North", "North", "East", "East"]);
+  });
 
-    if (!(/[A-Z]/.test(usuario)) ||
-     !(/[a-z]/.test(usuario)) ||
-      !(/[0-9]/.test(usuario)) ||
-        !(/[$_-]/.test(usuario))) {
-      return false;
-    }
+  it('agent(10, 10, [11, 3], [3, 5]) returns string "¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [11, 3] y el tablero es de 10x10"', () => {
+    expect(agent(10, 10, [11, 3], [3, 5])).to.deep.equal("¡ERROR! El punto en el que esta situado el agente no se encuentra dentro del tablero, ya que está en la posición [11, 3] y el tablero es de 10x10");
+  });
 
-    if ((/[A-Z][A-Z][A-Z]/.test(usuario)) ||
-      (/[a-z][a-z][a-z]/.test(usuario)) ||
-        (/[0-9][0-9][0-9]/.test(usuario)) ||
-          (/[$_-][$_-][$_-]/.test(usuario))) {
-      return false;
-    }
-
-    return true;
-  }
-
-  let usuario: string = "u__hello$122__";
-  let funcionEj10: boolean = isValidUsername(usuario);
-  console.log(`\nEl nombre de usuario "${usuario}" es válido: ${funcionEj10}`);
-
-  usuario = "Aho$12_B";
-  funcionEj10 = isValidUsername(usuario);
-  console.log(`\nEl nombre de usuario "${usuario}" es válido: ${funcionEj10}`);
-
-  usuario = "_Aho12_B";
-  funcionEj10 = isValidUsername(usuario);
-  console.log(`\nEl nombre de usuario "${usuario}" es válido: ${funcionEj10}`);
-
-  usuario = "Ac_12";
-  funcionEj10 = isValidUsername(usuario);
-  console.log(`\nEl nombre de usuario "${usuario}" es válido: ${funcionEj10}`);
+  it('agent(10, 10, [1, 3], [3, 13]) returns string "¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [3, 13] y el tablero es de 10x10"', () => {
+    expect(agent(10, 10, [1, 3], [3, 13])).to.deep.equal("¡ERROR! El punto objetivo no se encuentra dentro del tablero, ya que está en la posición [3, 13] y el tablero es de 10x10");
+  });
+});
 ```
 
-Salida del código:
 
-![Salida_ej10](/images/salida_ej10.png)
+#### Tests
+Si se ha seguido esta guía copiando todos los códigos y los tests finalmente al ejecutar la instrucción `npm run test` tendríamos que tener la siguiente salida:
+
+ ![Salida tests](salidatests.png)
 
 
 #### Conclusiones
