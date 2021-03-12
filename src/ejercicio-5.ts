@@ -8,7 +8,7 @@
  * @return Una función que devuelve un nuevo array que se obtiene del array pasado por parámetro a la funcion principal multiplicado por este número
  */
 
-export function multiplyAll(entrada: (number)[]) {
+export function multiplyAll(entrada: number[]): (multiplicador: number) => number[] {
   return (multiplicador: number) => {
     const salida: number[] = [];
     entrada.forEach((item) => {

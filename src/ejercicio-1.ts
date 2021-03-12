@@ -7,7 +7,7 @@
  * @param color Array que contiene los nombres de los colores de una resistencia
  * @return Un número de dos dígitos indicando el valor de la resistencia
  */
-export function decodeResistor(color: string[]) {
+export function decodeResistor(color: string[]): number | string {
   const colores: string[] = ["Negro", "Marrón", "Rojo", "Naranja", "Amarillo", "Verde", "Azul", "Violeta", "Gris", "Blanco"];
   let salida: number | string = "";
   let count: number = 0;

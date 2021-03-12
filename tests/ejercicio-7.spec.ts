@@ -5,7 +5,7 @@ import {resta} from '../src/ejercicio-7';
 import {producto} from '../src/ejercicio-7';
 import {distanciaEuclidea} from '../src/ejercicio-7';
 
-describe('Prueba de ejercicio 6', () => {
+describe('Prueba de ejercicio 7', () => {
   it('suma([5, 6, 2, 3], [7, 2, 1, 5]) returns vector [12, 8, 3, 8]', () => {
     expect(suma([5, 6, 2, 3], [7, 2, 1, 5])).to.deep.equal([12, 8, 3, 8]);
   });

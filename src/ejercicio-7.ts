@@ -12,7 +12,7 @@ type Point = [number, number, number, ...number[]];
  * @return Un punto resultante de la suma de los dos puntos entrantes si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
  */
 
-export function suma(punto1: Point, punto2: Point) {
+export function suma(punto1: Point, punto2: Point): Point | String {
   if (punto1.length == punto2.length) {
     const puntoS: Point = [0, 0, 0];
     let i: number = 0;
@@ -40,7 +40,7 @@ export function suma(punto1: Point, punto2: Point) {
  * @return Un punto resultante de la resta de los dos puntos entrantes si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones", si los puntos no tienen la misma dimensión
  */
 
-export function resta(punto1: Point, punto2: Point) {
+export function resta(punto1: Point, punto2: Point): Point | string {
   if (punto1.length == punto2.length) {
     const puntoS: Point = [0, 0, 0];
     let i: number = 0;
@@ -67,7 +67,7 @@ export function resta(punto1: Point, punto2: Point) {
  * @return Un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
  */
 
-export function producto(puntoE: Point, numero: number) {
+export function producto(puntoE: Point, numero: number): Point {
   const puntoS: Point = [0, 0, 0];
   let i: number = 0;
 
@@ -91,7 +91,7 @@ export function producto(puntoE: Point, numero: number) {
  * @return La distancia Euclídea entre estos dos si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones", si los puntos no tienen la misma dimensión
  */
 
-export function distanciaEuclidea(punto1: Point, punto2: Point) {
+export function distanciaEuclidea(punto1: Point, punto2: Point): number | string {
   if (punto1.length == punto2.length) {
     let distanciaEuclidea: number = 0;
     let i: number = 0;

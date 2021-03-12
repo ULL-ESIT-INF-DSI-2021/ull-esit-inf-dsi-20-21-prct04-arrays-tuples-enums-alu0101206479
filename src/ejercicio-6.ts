@@ -11,7 +11,7 @@ type Point = [number, number];
  * @return Un punto resultante de la suma de los dos puntos entrantes
  */
 
-export function suma(punto1: Point, punto2: Point) {
+export function suma(punto1: Point, punto2: Point): Point {
   const puntoS: Point = [0, 0];
   puntoS[0] = punto1[0] + punto2[0];
   puntoS[1] = punto1[1] + punto2[1];
@@ -29,7 +29,7 @@ export function suma(punto1: Point, punto2: Point) {
  * @return Un punto resultante de la resta de los dos puntos entrantes
  */
 
-export function resta(punto1: Point, punto2: Point) {
+export function resta(punto1: Point, punto2: Point): Point {
   const puntoS: Point = [0, 0];
   puntoS[0] = punto1[0] - punto2[0];
   puntoS[1] = punto1[1] - punto2[1];
@@ -47,7 +47,7 @@ export function resta(punto1: Point, punto2: Point) {
  * @return Un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
  */
 
-export function producto(puntoE: Point, numero: number) {
+export function producto(puntoE: Point, numero: number): Point {
   const puntoS: Point = [0, 0];
   puntoS[0] = puntoE[0] * numero;
   puntoS[1] = puntoE[1] * numero;
@@ -65,7 +65,7 @@ export function producto(puntoE: Point, numero: number) {
  * @return La distancia Euclídea entre estos dos
  */
 
-export function distanciaEuclidea(punto1: Point, punto2: Point) {
+export function distanciaEuclidea(punto1: Point, punto2: Point): number {
   let distanciaEuclidea: number = 0;
   distanciaEuclidea = Math.sqrt(Math.pow(punto2[0] - punto1[0], 2) + Math.pow(punto2[1] - punto1[1], 2));
   return distanciaEuclidea;
