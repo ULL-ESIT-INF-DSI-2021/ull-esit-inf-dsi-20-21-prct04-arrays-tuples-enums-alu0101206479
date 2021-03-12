@@ -30,7 +30,7 @@ Finalmente, nos tiene que quedar algo parecido a lo siguiente (Se muestra a la i
 En cuanto a los ejercicios que se mostrarán a continuación, podemos ver sus respectivos enunciados [en el enunciado de la práctica 4](https://ull-esit-inf-dsi-2021.github.io/prct04-arrays-tuples-enums/), los haremos todos en el directorio `/src` y haremos las respectivas pruebas en el directorio `/test`.
 
 ##### Ejercicio 1 - Decodificar resistencias
-En este ejercicio se creará la función `function decodeResistor(color: string[]): number | string`, la cual recibirá como parámetro los nombres de los colores de una resistencia y retornará un número de dos dígitos indicando el valor de la resistencia. 
+En este ejercicio se creará la función `decodeResistor(color: string[]): number | string`, la cual recibirá como parámetro los nombres de los colores de una resistencia y retornará un número de dos dígitos indicando el valor de la resistencia. 
 
 Lo primero que se debe hacer en la función es crear el `array` con la codificación de los colores, en el cual cada color va a corresponder con el número de su posición. Por ejemplo, el negro corresponde con el 0 porque está en la posición 0 del `array`. Posteriormente crearemos la variable de salida y una variable contador, recorreremos con un `forEach` el `array` de entrada y dentro de este tendremos un condicional en el que se comprueba con el contador si hay más de 2 colores en el array de entrada. En ese caso se llegará hasta el segundo color introdujendo los correspondientes números en la salida y de ahí se ignorarán los demás. Dentro de dicho condicional con la función `indexOf` obtendremos los número de las posiciones de los colores busquemos, introduciremos este número en la variable de salida y cuando acabe el `forEach` dicha variable la pasaremos a número y se retornará.
 
@@ -81,7 +81,7 @@ describe('Prueba de ejercicio 1', () => {
 
 
 ##### Ejercicio 2 - Palabras encadenadas en un array
-En este ejercicio se creará la función `function meshArray(palabras: string[]): string`, la cual recibirá como parámetro un `array de string` con las palabras a comprobar. Se comprobará si las palabras estan encadenadas y en ese caso la función devolverá una cadena de texto que contenga las letras que encadenan las palabras del `array`, en caso contrario, la funcion retornará la cadena `"Error al encadenar"`.
+En este ejercicio se creará la función `meshArray(palabras: string[]): string`, la cual recibirá como parámetro un `array de string` con las palabras a comprobar. Se comprobará si las palabras estan encadenadas y en ese caso la función devolverá una cadena de texto que contenga las letras que encadenan las palabras del `array`, en caso contrario, la funcion retornará la cadena `"Error al encadenar"`.
 
 Lo primero que se debe hacer en la función es crear las variables necesarias para el funcionamiento de esta. Entre dichas variables, es importante destacar las siguientes:
  * `posicionPp`: Con esta nos moveremos en la palabra que estemos analizando.
@@ -153,7 +153,7 @@ export function meshArray(palabras: string[]): string {
 
 ```
 
-El test sería el siguiente (/tests/ejercicio-2.spec.ts)::
+El test sería el siguiente (/tests/ejercicio-2.spec.ts):
 
 ```typescript
 import 'mocha';
@@ -173,133 +173,123 @@ describe('Prueba de ejercicio 2', () => {
 ```
 
 
-##### Ejercicio 3 - Validador de mensajes
-En este ejercicio crearemos la funcion `isValid(cadena: string): boolean` para comprobar si un mensaje es válido según diversas condiciones. A esta función le entra como parámetro una cadena de texto y retorna true o false dependiendo si la cadena es válida o no respectivamente.
+##### Ejercicio 3 - Calcular la media y concatenar cadenas
+En este ejercicio crearemos la funcion `meanAndConcatenate(entrada: (number | string)[]): [number, string]`. A esta función le entra como parámetro un array de números y letras y retornará un array con dos valores (La media de los valores númericos como primer valor y una cadena resultaante de la concatenación de carácteres del array recibido como segundo valor).
 
-En esta función lo primero que se hará es crear las variables necesarias para posteriormente a través de un bucle `for` ir moviendonos por los números de la cadena, ya que las letras las vamos a comprobar dentro del último bucle `while` que se encuentra.
+En esta función lo primero que se hará es crear las variables necesarias para posteriormente a través de un bucle `forEach` ir moviendonos en el array de entrada. Dentro del bucle comprobamos con un guardian de tipo (`typeof`) si el elemento que estamos analizando es un número para, en ese caso incrementar el sumatorio de la media con el número que estemos analizando y a parte incrementar una variable que nos sirve para contar el número de elementos. En caso de que sea una letra lo que estamos analizando, la concatenamos a la variable `cadena`.
 
-Dentro del bucle `for` inicializamos las variables y posteriormente a través de una `expresión regular` y un bucle `while` iremos leyendo el número en el que estemos situados para más tarde poder contar el número de letras que tienen que venir a continuación, se utiliza un bucle while porque el número puede tener más de una cifra, también se avanza la `i` para ir moviendonos en la cadena.
+Posteiormente, cuando se acabe el bucle se dividirá el sumatorio de los números por la cantidad de números del array recibido para obtener la media. Y finalmente la función retorna un vector que tiene como primer valor dicha media y como segundo valor la cadena con las letras concatenadas.
 
-Más adelate pasamos el número sacado de la cadena a número entero para después poder realizar comprobaciones. Y también podemos observar otro bucle `while` el cual contará el número de letras que haya hasta encontrar un número (se irá avanzando la i).
-
-Y finalmente se realiza una comprobación en la que si el número que cogimos de la cadena es igual al contador de las letras que vinieron despues de este, continua a la siguiente iteración (La cual empezaría en el siguiente número de la cadena). Pero si es igual, la función retornaría false ya que la cadena no sería válida. Si acaba el for y no se ha retornado false, la cadena sería válida y se retornaría true.
-
-El código del ejercicio sería el siguiente:
+El código del ejercicio sería el siguiente (/src/ejercicio-3.ts):
 
 ```typescript
-  function isValid(cadena: string): boolean {
-    let digitos: string = '';
-    let numero: number = 0;
-    let contador: number = 0;
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  meanAndConcatenate(['u', 6, 'd', 1, 'i', 'w', 6, 's', 't', 4, 'a', 6, 'g', 1, 2, 'w', 8, 'o', 2, 0]); // Valor de retorno = [3.6, 'udiwstagwo']
+ * ```
+ * Función que recibe números y letras en un array y devuelve la media de los números y las letras concadenadas en otro array
+ * @param entrada Array que los números y las letras
+ * @return Un array con dos valores (La media de los valores numéricos y una cadena resultado de la concatenación de carácteres del array recibido)
+ */
 
-    for (let i: number = 0; i < cadena.length; i = i) {
-      digitos = '';
-      numero = 0;
-      contador = 0;
-      while (/\d/.test(cadena[i])) {
-        digitos = digitos + cadena[i];
-        i = i+1;
-      }
-      numero = parseInt(digitos);
-      while (!(/\d/.test(cadena[i])) && i < cadena.length) {
-        contador++;
-        i = i+1;
-      }
+export function meanAndConcatenate(entrada: (number | string)[]): [number, string] {
+  let media: number = 0;
+  let numNum: number = 0;
+  let cadena: string = "";
 
-      if (numero == contador) {
-        continue;
-      } else {
-        return false;
-      }
+  entrada.forEach((item) => {
+    if (typeof item === "number") {
+      media = media+item;
+      numNum++;
+    } else {
+      cadena = cadena+item;
     }
-    return true;
-  }
+  });
 
-  let mensaje: string = "";
-  let funcionEj3: boolean = isValid(mensaje);
-  console.log(`\nEl mensaje "${mensaje}" es valido: ${funcionEj3}`);
+  media = media/numNum;
 
-  mensaje = "3hey5hello2hi";
-  funcionEj3 = isValid(mensaje);
-  console.log(`\nEl mensaje "${mensaje}" es valido: ${funcionEj3}`);
-
-  mensaje = "4code10helloworld";
-  funcionEj3 = isValid(mensaje);
-  console.log(`\nEl mensaje "${mensaje}" es valido: ${funcionEj3}`);
-
-  mensaje = "4coe10helloworld";
-  funcionEj3 = isValid(mensaje);
-  console.log(`\nEl mensaje "${mensaje}" es valido: ${funcionEj3}`);
-
-  mensaje = "4code10helloorld";
-  funcionEj3 = isValid(mensaje);
-  console.log(`\nEl mensaje "${mensaje}" es valido: ${funcionEj3}`);
+  return [media, cadena];
+}
 ```
 
-Salida del código:
-
-![Salida_ej3](/images/salida_ej3.png)
-
-
-##### Ejercicio 4 - Conversor de estilo
-En este ejercicio dispondremos de las siguientes dos funciones:
-
-  * Función `fromSnakeToCamelCase(snakeCase: string): string`: Esta función recibe como parámetro una cadena en formato snakeCase (Con palabras separadas por barrabaja) y devuelve como resultado la cadena en formato camelCase (Con palabras separadas por la primera letra mayúscula de cada palabra a partir de la segunda palabra). Para ello se utiliza una variable denominada `camelCase` que en principio esta vacía y es donde se almacenará la cadena en el nuevo formato. Se utiliza un bucle `for` en el que se avanza en la cadena y se va comprobando en cada caracter si se encuentra una barrabaja. Mientras no se encuentre se va a ir introduciendo cada caracter de la cadena anterior en la variable creada y cuando se encuentre se va a ignorar y se va a introducir la letra que viene después en mayúscula (Esto se hace con la funcion `toUpperCase()`), a parte también se va a incrementar la `i`. Finalmente cuando se acabe el bucle `for` se retorna la cadena resultante.
-
- * Función `fromCamelToSnakeCase(camelCase: string): string`: Esta función recibe como parámetro una cadena en formato camelCase (Con palabras separadas por la primera letra mayúscula de cada palabra a partir de la segunda palabra) y devuelve como resultado la cadena en formato snakeCase (Con palabras separadas por barrabaja). Para ello se utiliza una variable denominada `snakeCase` que en principio esta vacía y es donde se almacenará la cadena en el nuevo formato. Se utiliza un bucle `for` en el que se avanza en la cadena y se va comprobando en cada caracter si se encuentra una letra mayúscula. Mientras no se encuentre se va a ir introduciendo cada caracter de la cadena anterior en la variable creada y cuando se encuentre se va a introducir una barrabaja seguida de la letra que se esta analizando en minúscula (Esto se hace con la funcion `toLowerCase()`). Finalmente cuando se acabe el bucle `for` se retorna la cadena resultante.
-
-El código del ejercicio sería el siguiente:
+El test sería el siguiente (/tests/ejercicio-3.spec.ts):
 
 ```typescript
-  function fromSnakeToCamelCase(snakeCase: string): string {
-    let camelCase: string = '';
-    for (let i: number = 0; i < snakeCase.length; i++) {
-      if (snakeCase[i] == "_") {
-        camelCase = camelCase + snakeCase.charAt(i+1).toUpperCase();
-        i++;
-      } else {
-        camelCase = camelCase + snakeCase[i];
-      }
-    }
-    return camelCase;
-  }
+import 'mocha';
+import {expect} from 'chai';
+import {meanAndConcatenate} from '../src/ejercicio-3';
 
-  function fromCamelToSnakeCase(camelCase: string): string {
-    let snakeCase: string = '';
-    for (let i: number = 0; i < camelCase.length; i++) {
-      if (camelCase[i] == camelCase.charAt(i).toUpperCase()) {
-        snakeCase = snakeCase + "_" + camelCase.charAt(i).toLowerCase();
-      } else {
-        snakeCase = snakeCase + camelCase[i];
-      }
-    }
-    return snakeCase;
-  }
-
-  let nombre: string = "sample_string";
-  let funcionEj4: string = fromSnakeToCamelCase(nombre);
-  console.log(`\nEl nombre en formato Snake Case "${nombre}", en formato Camel Case sería: ${funcionEj4}`);
-
-  nombre = "the_stealth_warrior";
-  funcionEj4 = fromSnakeToCamelCase(nombre);
-  console.log(`\nEl nombre en formato Snake Case "${nombre}", en formato Camel Case sería: ${funcionEj4}`);
-
-  nombre = "sampleString";
-  funcionEj4 = fromCamelToSnakeCase(nombre);
-  console.log(`\nEl nombre en formato Camel Case "${nombre}", en formato Snake Case sería: ${funcionEj4}`);
-
-  nombre = "theStealthWarrior";
-  funcionEj4 = fromCamelToSnakeCase(nombre);
-  console.log(`\nEl nombre en formato Camel Case "${nombre}", en formato Snake Case sería: ${funcionEj4}`);
+describe('Prueba de ejercicio 3', () => {
+  it("meanAndConcatenate(['u', 6, 'd', 1, 'i', 'w', 6, 's', 't', 4, 'a', 6, 'g', 1, 2, 'w', 8, 'o', 2, 0]) returns array [3.6, 'udiwstagwo']", () => {
+    expect(meanAndConcatenate(['u', 6, 'd', 1, 'i', 'w', 6, 's', 't', 4, 'a', 6, 'g', 1, 2, 'w', 8, 'o', 2, 0])).to.deep.equal([3.6, 'udiwstagwo']);
+  });
+});
 ```
 
-Salida del código:
 
-![Salida_ej4](/images/salida_ej4.png)
+##### Ejercicio 4 - Mover los ceros al final
+En este ejercicio crearemos la funcion `moveZeros(entrada: (number)[]): (number)[]`. A esta función le entra como parámetro un `array` de números y retornará el mismo `array` con los numeros en el mismo orden pero los 0 desplazados al final del vector.
+
+En esta función lo primero que se hará es crear las variables necesarias para posteriormente a través de un bucle `forEach` ir moviendonos en el `array` de entrada. Dentro del bucle lo primero que se hace es inicializamr la variable auxiliar `j` a la variable `i` para en todo momento estar en lo que estamos analizando. Posteriormente comprobamos si el dígito que estamos analizando es un 0 y en ese caso a través de la variable `j` y un bucle `while` lo moveremos hasta el final del `array` y incrementamos la variable `i`. En caso contrario simpemente incrementamos la variable `i` y pasamos a la siguiente iteración del bucle.
+
+Finalmente la función retornará el vector de entrada pero con los 0 desplazados al final del vector.
+
+El código del ejercicio sería el siguiente (/src/ejercicio-4.ts):
+
+```typescript
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  moveZeros([1, 0, 1, 2, 0, 1, 3]; // Valor de retorno = [1, 1, 2, 1, 3, 0, 0]
+ * ```
+ * Función que recibe un array de numeros y los 0 los desplaza al final
+ * @param entrada Array de numeros
+ * @return Un array con los numeros en el mismo orden pero los 0 desplazados al final del vector
+ */
+
+export function moveZeros(entrada: (number)[]): (number)[] {
+  let aux: number = 0;
+  let i: number = 0;
+  let j: number = 0;
+
+  entrada.forEach((item) => {
+    j = i;
+    if (item == 0) {
+      while (j+1 < entrada.length) {
+        aux = entrada[j];
+        entrada[j] = entrada[j+1];
+        entrada[j+1] = aux;
+        j++;
+      }
+      i++;
+    } else {
+      i++;
+    }
+  });
+
+  return entrada;
+}
+
+```
+
+El test sería el siguiente (/tests/ejercicio-4.spec.ts):
+
+```typescript
+import 'mocha';
+import {expect} from 'chai';
+import {moveZeros} from '../src/ejercicio-4';
+
+describe('Prueba de ejercicio 4', () => {
+  it('moveZeros([1, 0, 1, 2, 0, 1, 3]) returns vector [1, 1, 2, 1, 3, 0, 0]', () => {
+    expect(moveZeros([1, 0, 1, 2, 0, 1, 3])).to.deep.equal([1, 1, 2, 1, 3, 0, 0]);
+  });
+});
+```
 
 
-##### Ejercicio 5 - Un solo golpe
-En este ejercicio se creará la función `onePunch(cadena: string): string`, la cual recibirá como parámetro una cadena de texto y si esta es vacía devolverá la cadena "Broken!", pero si no lo es devolverá la cadena ordenada, sin las "a" y si las "e". Para ello lo primero que se realiza es comprobar si la cadena de entrada es vacía y si lo es retornar la cadena correspondiente. Pero si no lo es lo que se hace es que la cadena se separa en palabras a través de la función `split(" ")`, se ordena alfabéticamente a través de la función `sort()`, se vuelve a unir con espacios entre medio a través de la función `join(" ")`, se quitan las "a" y las "e" a través de la función `replace(/[ae]/g, "")`, en la cual utilizamos una `expresión regular`. Y finalmente se retorna la cadena.
+##### Ejercicio 5 - Factoría de multiplicaciones
+En este ejercicio se creará la función `multiplyAll(entrada: number[]): (multiplicador: number) => number[]`, la cual recibirá como parámetro una cadena de texto y si esta es vacía devolverá la cadena "Broken!", pero si no lo es devolverá la cadena ordenada, sin las "a" y si las "e". Para ello lo primero que se realiza es comprobar si la cadena de entrada es vacía y si lo es retornar la cadena correspondiente. Pero si no lo es lo que se hace es que la cadena se separa en palabras a través de la función `split(" ")`, se ordena alfabéticamente a través de la función `sort()`, se vuelve a unir con espacios entre medio a través de la función `join(" ")`, se quitan las "a" y las "e" a través de la función `replace(/[ae]/g, "")`, en la cual utilizamos una `expresión regular`. Y finalmente se retorna la cadena.
 
 El código del ejercicio sería el siguiente:
 
@@ -342,143 +332,297 @@ Salida del código:
 ![Salida_ej5](/images/salida_ej5.png)
 
 
-##### Ejercicio 6 - Conversor ISBN
-En este ejercicio se creará la función `isValidISBN(isbn: string): boolean`, la cual recibirá como parámetro una cadena de texto que representará un ISBN y devolverá como resultado true o false dependiendo si el resultado es válido o no, respectivamente. Para ello lo primero que se hace es que a través de la función `replace(/[-]/g, "")` (La cual utiliza una `expresión regular`) quitaremos los guiones de la cadena por si acaso el ISBN se haya pasado con los números separados por guiones.
+##### Ejercicio 6 - Puntos bi-dimensionales
+En este ejercicio lo primero que haremos es crear el tipo `Point`, el cual representará puntos bi-dimensionales y que va a ser un vector de dos números (coordenada X y coordenada Y). Y posteriormente crearemos las siguientes funciones:
 
-Posteriormente declararemos la variable `sumatorio` que esta inicializada a cero en la que después a través de un bucle `for` en el cual avanzamos en la cadena, se irá almacenando el sumatorio de la siguiente formula (La cual determina que el ISBN sea válido o no):
+ * `suma(punto1: Point, punto2: Point): Point`: Función que recibe como parámetros dos puntos y finalmente retorna un nuevo punto resultante de la suma de estos dos. Para ello lo primero que se hace es que se crea el punto de salida. Posteriormente se asignará la coordenada x del punto de salida (Posición 0) a la suma de las coordenadas x de los dos puntos de entrada y se hará lo mismo con las coordenadas y (Posición 1). Finalmente la función retornará el punto resultante.
 
-`(x1 * 10 + x2 * 9 + x3 * 8 + x4 * 7 + x5 * 6 + x6 * 5 + x7 * 4 + x8 * 3 + x9 * 2 + x10 * 1) mod 11 == 0`
+ * `resta(punto1: Point, punto2: Point): Point`: Función que recibe como parámetros dos puntos y finalmente retorna un nuevo punto resultante de la resta de estos dos. Para ello lo primero que se hace es que se crea el punto de salida. Posteriormente se asignará la coordenada x del punto de salida (Posición 0) a la resta de las coordenadas x de los dos puntos de entrada y se hará lo mismo con las coordenadas y. Finalmente la función retornará el punto resultante (Posición 1).
 
-Para ello, en el bucle `for` se va analizando posición a posición y se comprueba si 
-en la cadena la letra "X" ya que esta representa un 10 y se multiplicaría por el número correspondiente. Si no se encuentra una X, se va a pasar el número que se encuentra en la cadena a número entero y se va a multiplicar por el número correspondiente. Todo esto se ira sumando en cada iteración.
+ * `producto(puntoE: Point, numero: number): Point`: Función que recibe como parámetros un punto y un número (el multiplicador) y devuelve un nuevo punto resultante de la multiplicación del punto de entrada por el número de entrada (multiplicador). Para ello lo primero que se hace es que se crea el punto de salida. Posteriormente se asignará la coordenada x del punto de salida (Posición 0) a la multiplicación de la coordenada x del punto de entrada por el multiplicador y haremos lo mismo con las coordenada y (Posición 1). Finalmente la función retornará el punto resultante.
 
-Finalmente, despues de acabar el bucle, se comprueba si el sumatorio que se ha sacado es divisible por 11 y si lo es, el ISBN sería valido y la función retornaría true. Pero si no lo es, no sería válido y la función retornaría false.
+ * `distanciaEuclidea(punto1: Point, punto2: Point): number`: Función que recibe como parámetros dos puntos y finalmente retorna la distancia Euclídea entre estos dos. Para ello lo primero que se hace es que se crea la variable `distanciaEuclidea`. Posteriormente se asignará su valor a la distancia Euclídea que se hará con la siguiente formula:
 
-El código del ejercicio sería el siguiente:
+   ![Formula Distancia Euclídea](distanciaeuclidea.svg)
+  
+   De la cual la raíz cuadrada se calculará con la función `Math.sqrt` y las potencias con la función `Math.pow`. Finalmente se retornará la variable `distanciaEuclidea`.
 
-```typescript
-  function isValidISBN(isbn: string): boolean {
-    isbn = isbn.replace(/[-]/g, "");
-    if (isbn.length < 10) {
-      return false;
-    }
-    let sumatorio: number = 0;
-
-    for (let i = 0; i<isbn.length; i++) {
-      if (isbn[i] == "X") {
-        sumatorio = sumatorio + (10 * (isbn.length-i));
-      } else {
-        sumatorio = sumatorio + (parseInt(isbn[i]) * (isbn.length-i));
-      }
-    }
-
-    if (sumatorio%11 == 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  let isbn: string = "3-598-21508-8";
-  let funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-
-  isbn = "3598215088";
-  funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-
-  isbn = "3-598-21507-X";
-  funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-
-  isbn = "359821507X";
-  funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-
-  isbn = "35-98-285";
-  funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-
-  isbn = "3598215086";
-  funcionEj6 = isValidISBN(isbn);
-  console.log(`\nEl ISBN "${isbn}" es válido: ${funcionEj6}`);
-```
-
-Salida del código:
-
-![Salida_ej6](/images/salida_ej6.png)
-
-
-##### Ejercicio 7 - El siguiente número
-En este ejercicio se creará la función `siguienteNumero(numero: number): number`, la cual recibirá como parámetro un entero positivo y devolverá el siguiente número mayor que pueda ser formado al reposicionar sus dígitos. Para ello lo primero que se hace es crear la variable `numText` que almacenará el `number` que entra a la función en `string` a través de la función `toFixed()`, esto se hace para poder ir analizando los dígitos del número entre sí e ir sustituyéndolos. También se crea una variable auxiliar que servirá para almacenar contenido posteriormente. 
-
-Lo siguiente que se hará es crear un bucle `for` en el que nos movemos desde el final del número hasta el principio y otro bucle for en el que nos movemos al revés (desde el principio hasta el final). Lo que hacemos es que el dígito que estemos analizando (Empezando por el de la derecha) lo comparamos con el de su izquierda y lo vamos intercambiando si es menor o igual que este, hasta que encontremos uno que es mayor, que se intercambiaría y la función retornaría el número nuevo. Hariamos esto susesivamente moviéndonos por los digitos del número si no encontramos uno mayor.
-
-Si nunca se encuentra un dígito mayor por el que intercambiar después de revisar todos los digitos del número, la función retornará -1.
-
-El código del ejercicio sería el siguiente:
+El código del ejercicio sería el siguiente (/src/ejercicio-6.ts):
 
 ```typescript
-  function siguienteNumero(numero: number): number {
-    let numText: string = numero.toFixed();
-    let aux: string = "";
-    for (let i: number = numText.length-1; i > -1; i--) {
-      for (let j: number = 0; j < numText.length; j++) {
-        if (i-j > 0) {
-          if (parseInt(numText[i - j]) <= parseInt(numText[i-j-1])) {
-            aux = numText[i-j];
-            numText = numText.substr(0, i-j-1) + aux +
-            numText[i-j-1] + numText.substr(i-j+1, numText.length);
-          } else {
-            aux = numText[i-j];
-            numText = numText.substr(0, i-j-1) + aux +
-            numText[i-j-1] + numText.substr(i-j+1, numText.length);
-            return parseInt(numText);
-          }
-        }
-      }
-      numText = numero.toFixed();
-    }
-    return -1;
-  }
+type Point = [number, number];
 
-  console.log(`\nNúmero -> Siguiente número mayor: `);
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  suma([5, 3], [2, 7]); // Valor de retorno = [7, 10]
+ * ```
+ * Función que recibe dos puntos y devuelve un punto que es el resultado de la suma entre los dos entrantes
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return Un punto resultante de la suma de los dos puntos entrantes
+ */
 
-  let numeroEj7: number = 1275;
-  let funcionEj7: number = siguienteNumero(numeroEj7);
-  console.log(`\n${numeroEj7} -> ${funcionEj7}`);
+export function suma(punto1: Point, punto2: Point): Point {
+  const puntoS: Point = [0, 0];
+  puntoS[0] = punto1[0] + punto2[0];
+  puntoS[1] = punto1[1] + punto2[1];
+  return puntoS;
+}
 
-  numeroEj7 = 12;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  resta([5, 3], [2, 7]); // Valor de retorno = [3, -4]
+ * ```
+ * Función que recibe dos puntos y devuelve un punto que es el resultado de la resta entre los dos entrantes
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return Un punto resultante de la resta de los dos puntos entrantes
+ */
 
-  numeroEj7 = 513;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+export function resta(punto1: Point, punto2: Point): Point {
+  const puntoS: Point = [0, 0];
+  puntoS[0] = punto1[0] - punto2[0];
+  puntoS[1] = punto1[1] - punto2[1];
+  return puntoS;
+}
 
-  numeroEj7 = 2017;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  producto([5, 3], 2); // Valor de retorno = [10, 6]
+ * ```
+ * Función que recibe como parámetros un punto y un número y devuelve un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
+ * @param puntoE Punto
+ * @param numero Número por el que se multiplica
+ * @return Un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
+ */
 
-  numeroEj7 = 9;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+export function producto(puntoE: Point, numero: number): Point {
+  const puntoS: Point = [0, 0];
+  puntoS[0] = puntoE[0] * numero;
+  puntoS[1] = puntoE[1] * numero;
+  return puntoS;
+}
 
-  numeroEj7 = 111;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  distanciaEuclidea([5, 3], [2, 7]); // Valor de retorno = 5
+ * ```
+ * Función que recibe dos puntos y devuelve la distancia Euclídea entre estos dos
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return La distancia Euclídea entre estos dos
+ */
 
-  numeroEj7 = 531;
-  funcionEj7 = siguienteNumero(numeroEj7);
-  console.log(`${numeroEj7} -> ${funcionEj7}`);
+export function distanciaEuclidea(punto1: Point, punto2: Point): number {
+  let distanciaEuclidea: number = 0;
+  distanciaEuclidea = Math.sqrt(Math.pow(punto2[0] - punto1[0], 2) + Math.pow(punto2[1] - punto1[1], 2));
+  return distanciaEuclidea;
+}
 ```
 
-Salida del código:
+El test sería el siguiente (/tests/ejercicio-6.spec.ts):
 
-![Salida_ej7](/images/salida_ej7.png)
+```typescript
+import 'mocha';
+import {expect} from 'chai';
+import {suma} from '../src/ejercicio-6';
+import {resta} from '../src/ejercicio-6';
+import {producto} from '../src/ejercicio-6';
+import {distanciaEuclidea} from '../src/ejercicio-6';
+
+describe('Prueba de ejercicio 6', () => {
+  it('suma([5, 3], [2, 7]) returns vector [7, 10]', () => {
+    expect(suma([5, 3], [2, 7])).to.deep.equal([7, 10]);
+  });
+
+  it('resta([5, 3], [2, 7]) returns vector [3, -4]', () => {
+    expect(resta([5, 3], [2, 7])).to.deep.equal([3, -4]);
+  });
+
+  it('producto([5, 3], 2) returns vector [10, 6]', () => {
+    expect(producto([5, 3], 2)).to.deep.equal([10, 6]);
+  });
+
+  it('distanciaEuclidea([5, 3], [2, 7]) returns value 5', () => {
+    expect(distanciaEuclidea([5, 3], [2, 7])).to.be.equal(5);
+  });
+});
+```
 
 
-##### Ejercicio 8 - Contando IPs
+##### Ejercicio 7 - Puntos n-dimensionales
+En este ejercicio lo primero que haremos es crear el tipo `Point`, el cual representará puntos de 3 o más dimensiones y que va a ser un vector de al menos tres números. Y posteriormente crearemos las siguientes funciones:
+
+ * `suma(punto1: Point, punto2: Point): Point | String`: Función que recibe como parámetros dos puntos y finalmente retorna un nuevo punto resultante de la suma de estos dos. Para ello lo primero que se hará es comprobar que los dos puntos tienen el mismo número de dimensiones, si no es así la función retornará la cadena de error `"¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"`. Y en el caso que los dos puntos tengan las mismas dimensiones se creará el punto de salida y una variable `i` que servirá para movernos en el segundo punto. Posteriormente a través de un bucle `forEach` nos moveremos en las dimensiones del primer punto y le asignaremos a la dimensión correspondiente del punto de salida la suma de las dimensiones correspondientes de los dos puntos de entrada, posteriormente incrementaremos la i y pasaremos de iteración en iteración repitiendo el proceso. Finalmente la función retornará el punto resultante.
+
+ * `resta(punto1: Point, punto2: Point): Point | String`: Función que recibe como parámetros dos puntos y finalmente retorna un nuevo punto resultante de la resta de estos dos. Para ello lo primero que se hará es comprobar que los dos puntos tienen el mismo número de dimensiones, si no es así la función retornará la cadena de error `"¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"`. Y en el caso que los dos puntos tengan las mismas dimensiones se creará el punto de salida y una variable `i` que servirá para movernos en el segundo punto. Posteriormente a través de un bucle `forEach` nos moveremos en las dimensiones del primer punto y le asignaremos a la dimensión correspondiente del punto de salida la resta de las dimensiones correspondientes de los dos puntos de entrada, posteriormente incrementaremos la i y pasaremos de iteración en iteración repitiendo el proceso. Finalmente la función retornará el punto resultante.
+
+ * `producto(puntoE: Point, numero: number): Point`: Función que recibe como parámetros un punto y un número (el multiplicador) y devuelve un nuevo punto resultante de la multiplicación del punto de entrada por el número de entrada (multiplicador). Para ello lo primero que se hace es que se crea el punto de salida y la variable `i` que servirá de iterador. Posteriormente a través de un bucle `forEach` se le asignará al valor de cada dimensión del punto de salida, el valor de la multiplicación de dicha dimensión por el multiplicador, y se incrementará la `i`. Finalmente la función retornará el punto resultante.
+
+ * `distanciaEuclidea(punto1: Point, punto2: Point): number`: Función que recibe como parámetros dos puntos y finalmente retorna la distancia Euclídea entre estos dos. Para ello lo primero que se hará es comprobar que los dos puntos tienen el mismo número de dimensiones, si no es así la función retornará la cadena de error `"¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"`. Y en el caso que los dos puntos tengan las mismas dimensiones se creará la variable `distanciaEuclidea` y una variable `i` que servirá para movernos en el segundo punto. Posteriormente se asignará el valor de la variable `distanciaEuclidea` a la distancia Euclídea que se hará con la siguiente formula:
+
+   ![Formula Distancia Euclídea](distanciaeuclidea.svg)
+   
+   De la cual la raíz cuadrada se calculará con la función `Math.sqrt` y las potencias con la función `Math.pow`. Como no sabemos el número de dimensiones que tienen los puntos de entradas, a través de un bucle `forEach` se irá haciendo el sumatorio de la función. Finalmente se retornará la variable `distanciaEuclidea`.
+   
+El código del ejercicio sería el siguiente (/src/ejercicio-7.ts):
+
+```typescript
+type Point = [number, number, number, ...number[]];
+
+/**
+ * ```typescript
+ * // Ejemplos de llamadas
+ *  suma([5, 6, 2, 3], [7, 2, 1, 5]); // Valor de retorno = [12, 8, 3, 8]
+ *  suma([5, 6, 2, 3], [7, 2, 1]); // Valor de retorno = "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones", si los puntos no tienen la misma dimensión
+ * ```
+ * Función que recibe dos puntos y devuelve un punto que es el resultado de la suma entre los dos entrantes si tienen la misma dimensión, si no, devuelve la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return Un punto resultante de la suma de los dos puntos entrantes si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ */
+
+export function suma(punto1: Point, punto2: Point): Point | String {
+  if (punto1.length == punto2.length) {
+    const puntoS: Point = [0, 0, 0];
+    let i: number = 0;
+
+    punto1.forEach((item) => {
+      puntoS[i] = item + punto2[i];
+      i++;
+    });
+
+    return puntoS;
+  } else {
+    return "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones";
+  }
+}
+
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  resta([5, 6, 2, 3], [7, 2, 1, 5]); // Valor de retorno = [-2, 4, 1, -2]
+ *  resta([5, 6, 2, 3], [7, 2, 1]); // Valor de retorno = "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ * ```
+ * Función que recibe dos puntos y devuelve un punto que es el resultado de la resta entre los dos entrantes si tienen la misma dimensión, si no, devuelve la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return Un punto resultante de la resta de los dos puntos entrantes si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones", si los puntos no tienen la misma dimensión
+ */
+
+export function resta(punto1: Point, punto2: Point): Point | string {
+  if (punto1.length == punto2.length) {
+    const puntoS: Point = [0, 0, 0];
+    let i: number = 0;
+
+    punto1.forEach((item) => {
+      puntoS[i] = item - punto2[i];
+      i++;
+    });
+
+    return puntoS;
+  } else {
+    return "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones";
+  }
+}
+
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  producto([5, 6, 2, 3], 3); // Valor de retorno = [15, 18, 6, 9]
+ * ```
+ * Función que recibe como parámetros un punto y un número y devuelve un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
+ * @param puntoE Punto
+ * @param numero Número por el que se multiplica
+ * @return Un punto resultante de la multiplicación entre cada una de las coordenadas del punto entrante con el número entrante como segundo parámetro
+ */
+
+export function producto(puntoE: Point, numero: number): Point {
+  const puntoS: Point = [0, 0, 0];
+  let i: number = 0;
+
+  puntoE.forEach((item) => {
+    puntoS[i] = item*numero;
+    i++;
+  });
+
+  return puntoS;
+}
+
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  distanciaEuclidea([5, 6, 2, 3], [7, 2, 1, 5]); // Valor de retorno = 2
+ *  distanciaEuclidea([5, 6, 2, 3], [7, 2, 1]); // Valor de retorno = "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ * ```
+ * Función que recibe dos puntos y devuelve la distancia Euclídea entre estos dos, si tienen la misma dimensión, si no, devuelve la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"
+ * @param punto1 Primer punto
+ * @param punto2 Segundo punto
+ * @return La distancia Euclídea entre estos dos si estos tienen la misma dimensión o la cadena "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones", si los puntos no tienen la misma dimensión
+ */
+
+export function distanciaEuclidea(punto1: Point, punto2: Point): number | string {
+  if (punto1.length == punto2.length) {
+    let distanciaEuclidea: number = 0;
+    let i: number = 0;
+
+    punto1.forEach((item) => {
+      distanciaEuclidea = Math.pow(punto2[i] - item, 2);
+      i++;
+    });
+
+    distanciaEuclidea = Math.sqrt(distanciaEuclidea);
+    return distanciaEuclidea;
+  } else {
+    return "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones";
+  }
+}
+```
+
+El test sería el siguiente (/tests/ejercicio-7.spec.ts):
+
+```typescript
+import 'mocha';
+import {expect} from 'chai';
+import {suma} from '../src/ejercicio-7';
+import {resta} from '../src/ejercicio-7';
+import {producto} from '../src/ejercicio-7';
+import {distanciaEuclidea} from '../src/ejercicio-7';
+
+describe('Prueba de ejercicio 7', () => {
+  it('suma([5, 6, 2, 3], [7, 2, 1, 5]) returns vector [12, 8, 3, 8]', () => {
+    expect(suma([5, 6, 2, 3], [7, 2, 1, 5])).to.deep.equal([12, 8, 3, 8]);
+  });
+
+  it('suma([5, 6, 2, 3], [7, 2, 1]) returns string "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"', () => {
+    expect(suma([5, 6, 2, 3], [7, 2, 1])).to.be.equal("¡ERROR! Los puntos entrantes no tienen las mismas dimensiones");
+  });
+
+  it('resta([5, 6, 2, 3], [7, 2, 1, 5]) returns vector [-2, 4, 1, -2]', () => {
+    expect(resta([5, 6, 2, 3], [7, 2, 1, 5])).to.deep.equal([-2, 4, 1, -2]);
+  });
+
+  it('resta([5, 6, 2, 3], [7, 2, 1]) returns string "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"', () => {
+    expect(resta([5, 6, 2, 3], [7, 2, 1])).to.be.equal("¡ERROR! Los puntos entrantes no tienen las mismas dimensiones");
+  });
+
+  it('producto([5, 6, 2, 3], 3); returns vector [15, 18, 6, 9]', () => {
+    expect(producto([5, 6, 2, 3], 3)).to.deep.equal([15, 18, 6, 9]);
+  });
+
+  it('distanciaEuclidea([5, 6, 2, 3], [7, 2, 1]) returns string "¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"', () => {
+    expect(distanciaEuclidea([5, 6, 2, 3], [7, 2, 1])).to.be.equal("¡ERROR! Los puntos entrantes no tienen las mismas dimensiones");
+  });
+});
+
+```
+
+
+##### Ejercicio 8 - El agente
 En este ejercicio se creará la función `ipsInRange(ip1: string, ip2: string): number`, la cual recibirá como parámetro dos cadenas que representan las IPs y devuelve un valor numérico que represente el número de IPs disponibles en el rango correspondiente. Para ello lo primero que haremos en la función es crear dos constantes tipo string que almacenarán cada número de las IPs (serían 4 en total), también crearemos la variable `rango` que será la que contenga el rango de direcciones y la vairable `n` que nos servirá como variable auxiliar.
 
 Posteriormente haremos un bucle `for` que servirá para movernos en los números de las IPs de derecha a izquiera y hacer el sumatorio de sus respectivas restas multiplicadas por n (n que cada vez que nos movamos a la izquierda va a multiplicar su valor por 256, que va a ser el rango de direcciones disponibles entre cada valor de la resta).
