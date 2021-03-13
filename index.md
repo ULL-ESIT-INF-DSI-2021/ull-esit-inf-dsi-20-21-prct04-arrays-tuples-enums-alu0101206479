@@ -9,8 +9,10 @@ Esto es un informe para poder llevar a cabo la **práctica 4 de Desarrollo de Si
 A parte, como se ha llevado a cabo la metodología **TDD**, hemos reforzado nuestros conocimientos sobre ello. Y también hemos aprendido a utilizar **arrays, tuplas y enumerados** entre otras muchas herramientas. En este informe se mostrarán la resolución de los ejercicios y la explicación de estas soluciónes.
 
 
+
 #### Objetivos
 Los objetivos de esta práctica han sido crear la estructura de directorios adecuada para trabajar, añadiendole el generador de documentación TypeDoc y el uso del marco de pruebas Mocha con la libreria Chai. Pero lo principal ha sido resolver los 8 ejercicios que nos planteaban en el enunciado, para así familiarizarnos más profundamente con TypeScript, en concreto con los arrays, tuplas y enumerados.
+
 
 
 #### Crear la estructura básica y adecuada del proyecto, añadiendole el generador de documentación TypeDoc y el uso del marco de pruebas Mocha con la librería Chai.
@@ -26,8 +28,10 @@ Finalmente, nos tiene que quedar algo parecido a lo siguiente (Se muestra a la i
 ![Estructura del directorio](src/estructurafinal.png)
 
 
+
 #### Ejercicios
 En cuanto a los ejercicios que se mostrarán a continuación, podemos ver sus respectivos enunciados [en el enunciado de la práctica 4](https://ull-esit-inf-dsi-2021.github.io/prct04-arrays-tuples-enums/), los haremos todos en el directorio `/src` y haremos las respectivas pruebas en el directorio `/test`.
+
 
 ##### Ejercicio 1 - Decodificar resistencias
 En este ejercicio se creará la función `decodeResistor(color: string[]): number | string`, la cual recibirá como parámetro los nombres de los colores de una resistencia y retornará un número de dos dígitos indicando el valor de la resistencia. 
@@ -93,7 +97,6 @@ Posteriormente utilizaremos un bucle `forEach` en el que recorremos el `array` d
 Una vez que se sale del while se comprueba si las veces que se ha retrocedido en la palabra es menor a el número de letras que tiene la palabra, en ese caso, se introduce la información de variable `salidaAux` en la variable `salida` y en caso contrario significa que no hay encadenamiento, por lo que la variable `salida` tendrá el valor `"Error al encadenar"` y la variable `i` se pondrá a 100 (Un número lo suficientemente grande) para que no vuelva a entrar al bucle while en las siguientes palabras.
 
 Una vez se sale del bucle `forEach` se retorna la variable `salida`, que contendrá en una cadena de texto las letras que encadenan las palabras del `array` en caso de que haya encadenamiento en todas las palabras. O contendrá la cadena `"Error al encadenar"` en caso de que no haya encadenamiento en alguna de las palabras.
-
 
 El código del ejercicio sería el siguiente (/src/ejercicio-2.ts):
 
@@ -289,47 +292,45 @@ describe('Prueba de ejercicio 4', () => {
 
 
 ##### Ejercicio 5 - Factoría de multiplicaciones
-En este ejercicio se creará la función `multiplyAll(entrada: number[]): (multiplicador: number) => number[]`, la cual recibirá como parámetro una cadena de texto y si esta es vacía devolverá la cadena "Broken!", pero si no lo es devolverá la cadena ordenada, sin las "a" y si las "e". Para ello lo primero que se realiza es comprobar si la cadena de entrada es vacía y si lo es retornar la cadena correspondiente. Pero si no lo es lo que se hace es que la cadena se separa en palabras a través de la función `split(" ")`, se ordena alfabéticamente a través de la función `sort()`, se vuelve a unir con espacios entre medio a través de la función `join(" ")`, se quitan las "a" y las "e" a través de la función `replace(/[ae]/g, "")`, en la cual utilizamos una `expresión regular`. Y finalmente se retorna la cadena.
+En este ejercicio se creará la función `multiplyAll(entrada: number[]): (multiplicador: number) => number[]`, la cual recibirá como parámetro un `array` de números y retornará otra función que tomará como argumento un único valor numérico y devolverá un nuevo array. Para ello en el `return` debemos de crear una función anónima que recibe como parámetro un valor númerico (Multiplicador) en la que lo primero que hacemos es definir el array que retornará esta función y posteriormente con un bucle `forEach` multiplicaremos cada número del `array` de entrada de la función principal por el multiplicador de entrada de la función anónima y este valor resultante se lo introduciremos al vector de salida a través de la función `push(item*multiplicador)`. Finalmente la función retorna el `array` de salida.
 
-El código del ejercicio sería el siguiente:
+El código del ejercicio sería el siguiente (/src/ejercicio-5.ts):
 
 ```typescript
-  function onePunch(cadena: string): string {
-    if (cadena == "") {
-      return "Broken!";
-    }
+/**
+ * ```typescript
+ * // Ejemplo de llamada
+ *  multiplyAll([2, 6, 8])(3); // Valor de retorno = [6, 18, 24]
+ * ```
+ * Función que recibe un array de numeros y devuelve una función que tiene como parámetro un número y devolverá un nuevo array que se obtiene del primer array multiplicado por este número
+ * @param entrada Array de numeros
+ * @return Una función que devuelve un nuevo array que se obtiene del array pasado por parámetro a la funcion principal multiplicado por este número
+ */
 
-    cadena = cadena.split(" ").sort().join(" ").replace(/[ae]/g, "");
-
-    return cadena;
-  }
-
-  console.log(`\nDespués de separar, ordenar, unir las cadenas de nuevo y eliminar todas las apariciones de las letras a y e, las cadenas quedarian de la siguiente manera: `);
-
-  let cadena: string = "Beard Jeans Hairbrush Knuckleduster Sand";
-  let funcionEj5: string = onePunch(cadena);
-  console.log(`\n'${cadena}' => '${funcionEj5}'`);
-
-  cadena = "Sock Beard Vest Lady Sage";
-  funcionEj5 = onePunch(cadena);
-  console.log(`'${cadena}' => '${funcionEj5}'`);
-
-  cadena = "Beard Sack Gun Parachute Face-Kicking-Shoes";
-  funcionEj5 = onePunch(cadena);
-  console.log(`'${cadena}' => '${funcionEj5}'`);
-
-  cadena = "Snot Snow Soda Tank Beard";
-  funcionEj5 = onePunch(cadena);
-  console.log(`'${cadena}' => '${funcionEj5}'`);
-
-  cadena = "";
-  funcionEj5 = onePunch(cadena);
-  console.log(`'${cadena}' => '${funcionEj5}'`);
+export function multiplyAll(entrada: number[]): (multiplicador: number) => number[] {
+  return (multiplicador: number) => {
+    const salida: number[] = [];
+    entrada.forEach((item) => {
+      salida.push(item*multiplicador);
+    });
+    return salida;
+  };
+}
 ```
 
-Salida del código:
+El test sería el siguiente (/tests/ejercicio-5.spec.ts):
 
-![Salida_ej5](/images/salida_ej5.png)
+```typescript
+import 'mocha';
+import {expect} from 'chai';
+import {multiplyAll} from '../src/ejercicio-5';
+
+describe('Prueba de ejercicio 5', () => {
+  it('multiplyAll([2, 6, 8])(3) returns vector [6, 18, 24]', () => {
+    expect(multiplyAll([2, 6, 8])(3)).to.deep.equal([6, 18, 24]);
+  });
+});
+```
 
 
 ##### Ejercicio 6 - Puntos bi-dimensionales
@@ -343,7 +344,7 @@ En este ejercicio lo primero que haremos es crear el tipo `Point`, el cual repre
 
  * `distanciaEuclidea(punto1: Point, punto2: Point): number`: Función que recibe como parámetros dos puntos y finalmente retorna la distancia Euclídea entre estos dos. Para ello lo primero que se hace es que se crea la variable `distanciaEuclidea`. Posteriormente se asignará su valor a la distancia Euclídea que se hará con la siguiente formula:
 
-   ![Formula Distancia Euclídea](distanciaeuclidea.svg)
+   ![Formula Distancia Euclídea](src/distanciaeuclidea.svg)
   
    De la cual la raíz cuadrada se calculará con la función `Math.sqrt` y las potencias con la función `Math.pow`. Finalmente se retornará la variable `distanciaEuclidea`.
 
@@ -465,7 +466,7 @@ En este ejercicio lo primero que haremos es crear el tipo `Point`, el cual repre
 
  * `distanciaEuclidea(punto1: Point, punto2: Point): number`: Función que recibe como parámetros dos puntos y finalmente retorna la distancia Euclídea entre estos dos. Para ello lo primero que se hará es comprobar que los dos puntos tienen el mismo número de dimensiones, si no es así la función retornará la cadena de error `"¡ERROR! Los puntos entrantes no tienen las mismas dimensiones"`. Y en el caso que los dos puntos tengan las mismas dimensiones se creará la variable `distanciaEuclidea` y una variable `i` que servirá para movernos en el segundo punto. Posteriormente se asignará el valor de la variable `distanciaEuclidea` a la distancia Euclídea que se hará con la siguiente formula:
 
-   ![Formula Distancia Euclídea](distanciaeuclidea.svg)
+   ![Formula Distancia Euclídea](src/distanciaeuclidea.svg)
    
    De la cual la raíz cuadrada se calculará con la función `Math.sqrt` y las potencias con la función `Math.pow`. Como no sabemos el número de dimensiones que tienen los puntos de entradas, a través de un bucle `forEach` se irá haciendo el sumatorio de la función. Finalmente se retornará la variable `distanciaEuclidea`.
    
@@ -633,7 +634,6 @@ Posteriormente a través de otro bucle `while` y de condicionales `if` se compru
 
 Finalmente ya estaría el agente en la posición objetivo por lo que la función retorna el vector de movimiendos.
 
-
 El código del ejercicio sería el siguiente (/src/ejercicio-8.ts):
 
 ```typescript
@@ -714,25 +714,32 @@ describe('Prueba de ejercicio 8', () => {
 ```
 
 
+
 #### Tests
 Si se ha seguido esta guía copiando todos los códigos y los tests finalmente al ejecutar la instrucción `npm run test` tendríamos que tener la siguiente salida:
 
- ![Salida tests](salidatests.png)
+ ![Salida tests](src/salidatests.png)
+
 
 
 #### Conclusiones
-Como conclusión a la práctica, me ha parecido bastante entretenida e interesante la labor de hacer los ejercicios, ya que he aprendido a usar expresiones regulares en programación, a crear la estructura de directorios adecuada y a configurar las dependencias.
+Como conclusión a la práctica, me ha parecido bastante útil el aprender a usar herramientas como el generador de documentación TypeDoc, ya que a través de esta se crea una pagina web con la documentación de tu código organizada. Otra herramienta importante a destacar tambien es el Mocha con el uso de Chai, ya que poder tener organizadas las pruebas de tu código es increíble y super cómodo
 
-Poco a poco con las prácticas me estoy dando cuenta de que cuanto más me familiarizo con TypeScript más me gusta y me parece un lenguaje bastante interesante.
+Los ejercicios me han parecido entretenidos y no tan díficiles de elaborar, por lo que me quedo satisfecho con mi trabajo realizado en ellos.
+
 
 
 #### Bibliografía
 
 Nombre | Enlaces
 -------|--------
-Enunciado de la práctica | https://ull-esit-inf-dsi-2021.github.io/prct03-types-functions/
-Tutorial sobre los métodos que puede utilizar con `string` | https://www.w3schools.com/js/js_string_methods.asp
-Expresiones regulares en JavaScript | https://www.w3schools.com/js/js_regexp.asp
+Enunciado de la práctica | https://ull-esit-inf-dsi-2021.github.io/prct04-arrays-tuples-enums/
+Apuntes de la asignatura | https://ull-esit-inf-dsi-2021.github.io/typescript-theory/
+TypeDoc | https://typedoc.org/
+Mocha | https://mochajs.org/
+Chai | https://www.chaijs.com/
 Tutorial de creación de la estructura básica del proyecto | https://ull-esit-inf-dsi-2021.github.io/typescript-theory/typescript-project-setup.html
-Sistema factorial | https://es.wikipedia.org/wiki/Factor%C3%A1dico
-Proceso de verificación ISBN-10 | https://en.wikipedia.org/wiki/International_Standard_Book_Number
+Vídeo de ejemplo de instalación y configuración de TypeDoc en un proyecto TypeScript | https://drive.google.com/file/d/19LLLCuWg7u0TjjKz9q8ZhOXgbrKtPUme/view
+Repositorio GitHub con el ejemplo de configuración de TypeDoc en un proyecto TypeScript | https://github.com/ULL-ESIT-INF-DSI-2021/doc-test
+Vídeo de ejemplo de instalación y configuración de Mocha y Chai en un proyecto TypeScript | https://drive.google.com/file/d/1-z1oNOZP70WBDyhaaUijjHvFtqd6eAmJ/view
+Repositorio GitHub con el ejemplo de configuración de Mocha y Chai en un proyecto TypeScript | https://github.com/ULL-ESIT-INF-DSI-2021/doc-test
